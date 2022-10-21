@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import id from 'bson-objectid';
+import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
 
 import './phonebook.module.css';
@@ -20,7 +20,7 @@ const Phonebook = ({ addContact }) => {
     const data = {
       name,
       number,
-      id: id(),
+      id: nanoid(),
     };
     addContact(data);
     formReset();

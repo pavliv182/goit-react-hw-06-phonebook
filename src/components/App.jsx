@@ -1,72 +1,76 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { Notify } from 'notiflix';
+import { useDispatch, useSelector } from 'react-redux';
 import Section from './Section';
 import Phonebook from './Phonebook';
 import Contacts from './Contacts';
 import Filter from './Filter';
 import Notification from './Notification';
 
+import { add, remove } from 'redux/contacts/contacts-slice';
+import { addFilterContacts } from 'redux/filter/filter-slice';
+
 export const App = () => {
-  const [contacts, setContacts] = useState([]);
-  const [filter, setFilter] = useState('');
+  const dispatch = useDispatch();
+  const store = useSelector(store => store.contacts);
+  const filter = useSelector(store => store.filter);
 
-  const firstRender = useRef(true);
-  // console.log(firstRender);
+  console.log(store);
 
-  useEffect(() => {
-    const contacts = JSON.parse(localStorage.getItem('contacts'));
-    // console.log(contacts);
-    //  если const contacts существует и у него есть длинна то:
-    if (contacts?.length) {
-      setContacts(contacts);
-    }
-    firstRender.current = false;
-  }, []);
+  // useEffect(() => {
+  //   const contacts = JSON.parse(localStorage.getItem('contacts'));
+  //   // console.log(contacts);
+  //   //  если const contacts существует и у него есть длинна то:
+  //   if (contacts?.length) {
+  //     setContacts(contacts);
+  //   }
+  //   firstRender.current = false;
+  // }, []);
 
-  useEffect(() => {
-    if (!firstRender.current) {
-      localStorage.setItem('contacts', JSON.stringify(contacts));
-    }
-  }, [contacts]);
+  // useEffect(() => {
+  //   if (!firstRender.current) {
+  //     localStorage.setItem('contacts', JSON.stringify(contacts));
+  //   }
+  // }, [contacts]);
 
   const addContact = data => {
-    if (contacts.find(el => el.name === data.name)) {
+    if (store.find(el => el.name === data.name)) {
       Notify.failure('This contact is already in phonebook');
       return;
     }
 
-    setContacts(prevState => [...prevState, data]);
+    dispatch(add(data));
 
     Notify.success('Contact added succesfully!');
   };
 
   const addFilter = e => {
-    setFilter(e.target.value);
+    dispatch(addFilterContacts(e.target.value));
+    console.log(e.target.value);
   };
 
   const filterContacts = () => {
     if (filter) {
-      const filteredContacts = contacts.filter(el =>
+      const filteredContacts = store.filter(el =>
         el.name.toLowerCase().includes(filter.toLowerCase())
       );
       return filteredContacts;
     }
 
-    return contacts;
+    return store;
   };
 
   const deleteContact = id => {
-    setContacts(prevState => [...prevState.filter(el => el.id !== id)]);
+    dispatch(remove(id));
   };
 
-  // const { addContact, addFilter, filterContacts, deleteContact } = this;
   return (
     <>
       <Section title="Phonebook">
         <Phonebook addContact={addContact} />
       </Section>
       <Section title="Contacts">
-        {contacts.length ? (
+        {store.length ? (
           <>
             <Filter addFilter={addFilter} value={filter} />
             <Contacts data={filterContacts()} deleteContact={deleteContact} />
