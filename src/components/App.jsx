@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Notify } from 'notiflix';
 import { useDispatch, useSelector } from 'react-redux';
 import Section from './Section';
