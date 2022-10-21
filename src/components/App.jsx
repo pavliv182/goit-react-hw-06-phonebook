@@ -14,23 +14,7 @@ export const App = () => {
   const store = useSelector(store => store.contacts);
   const filter = useSelector(store => store.filter);
 
-  console.log(store);
-
-  // useEffect(() => {
-  //   const contacts = JSON.parse(localStorage.getItem('contacts'));
-  //   // console.log(contacts);
-  //   //  если const contacts существует и у него есть длинна то:
-  //   if (contacts?.length) {
-  //     setContacts(contacts);
-  //   }
-  //   firstRender.current = false;
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!firstRender.current) {
-  //     localStorage.setItem('contacts', JSON.stringify(contacts));
-  //   }
-  // }, [contacts]);
+  // console.log(store);
 
   const addContact = data => {
     if (store.find(el => el.name === data.name)) {
@@ -45,7 +29,7 @@ export const App = () => {
 
   const addFilter = e => {
     dispatch(addFilterContacts(e.target.value));
-    console.log(e.target.value);
+    // console.log(e.target.value);
   };
 
   const filterContacts = () => {
